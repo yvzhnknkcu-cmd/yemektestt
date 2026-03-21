@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>İBB Yemek Menüsü</title>
+<title>Ä°BB Yemek MenÃ¼sÃ¼</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -136,8 +136,7 @@
 
   /* SCROLL AREA */
   .scroll-area {
-    height: calc(100vh - 44px - 78px - 72px);
-    padding-bottom: 200px;
+    height: calc(100vh - 44px - 78px - 56px - 72px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 16px 16px 20px;
@@ -326,7 +325,6 @@
   .preview-single img { width: 100%; object-fit: cover; max-height: 160px; display: block; }
 
   /* GENERATE BTN */
-  .generate-wrap { padding: 0 16px 12px; }
   .generate-btn {
     width: 100%;
     padding: 17px;
@@ -388,6 +386,28 @@
   }
   .download-btn.visible { display: flex; }
   .download-btn:active { background: rgba(46,204,113,0.2); transform: scale(0.98); }
+
+  /* FIXED ACTION BAR */
+  .action-bar {
+    position: fixed;
+    bottom: 72px;
+    left: 0; right: 0;
+    z-index: 150;
+    padding: 0 16px 10px;
+    background: linear-gradient(to bottom, transparent, var(--dark) 30%);
+  }
+  .action-bar .status-notice {
+    margin: 0 0 8px 0;
+    border-radius: var(--radius-md);
+  }
+  .action-bar .download-btn {
+    width: 100%;
+    margin: 0 0 8px 0;
+    border-radius: var(--radius-lg);
+  }
+  .action-bar .generate-btn {
+    width: 100%;
+  }
 
   /* BOTTOM NAV */
   .bottom-nav {
@@ -471,8 +491,8 @@
 <div class="status-bar">
   <span class="status-time" id="clock">09:41</span>
   <div class="status-icons">
-    <span>📶</span>
-    <span>🔋</span>
+    <span>ğŸ“¶</span>
+    <span>ğŸ”‹</span>
   </div>
 </div>
 
@@ -480,21 +500,21 @@
 <div class="app-header">
   <div class="header-top">
     <div class="app-logo">
-      <div class="logo-icon">🍽️</div>
+      <div class="logo-icon">ğŸ½ï¸</div>
       <div class="logo-text">
-        <h1>Yemek Menüsü</h1>
-        <p>Bağcılar Cüneyt Arkın Yurdu</p>
+        <h1>Yemek MenÃ¼sÃ¼</h1>
+        <p>BaÄŸcÄ±lar CÃ¼neyt ArkÄ±n Yurdu</p>
       </div>
     </div>
-    <div class="header-action" onclick="showToast('ℹ️ İBB Gençlik ve Spor Müdürlüğü')">ℹ️</div>
+    <div class="header-action" onclick="showToast('â„¹ï¸ Ä°BB GenÃ§lik ve Spor MÃ¼dÃ¼rlÃ¼ÄŸÃ¼')">â„¹ï¸</div>
   </div>
   <div class="tab-switcher">
     <button class="tab-pill active" onclick="switchTab('sabah')" id="pill-sabah">
-      <span>🌅</span> Sabah Kahvaltısı
+      <span>ğŸŒ…</span> Sabah KahvaltÄ±sÄ±
       <span class="tab-pill-dot"></span>
     </button>
     <button class="tab-pill" onclick="switchTab('aksam')" id="pill-aksam">
-      <span>🌙</span> Akşam Yemeği
+      <span>ğŸŒ™</span> AkÅŸam YemeÄŸi
       <span class="tab-pill-dot"></span>
     </button>
   </div>
@@ -511,16 +531,16 @@
         <div class="section-num">1</div>
         <div class="section-info">
           <div class="section-title">Genel Bilgiler</div>
-          <div class="section-sub">Tarih ve menü öğeleri</div>
+          <div class="section-sub">Tarih ve menÃ¼ Ã¶ÄŸeleri</div>
         </div>
       </div>
       <div class="field-label">Tarih</div>
       <input type="date" class="field-input" id="sabah-tarih">
       <div class="divider"></div>
-      <div class="field-label">Menü Öğeleri</div>
+      <div class="field-label">MenÃ¼ Ã–ÄŸeleri</div>
       <div class="menu-items" id="sabah-menu-items"></div>
       <button class="add-btn" onclick="addMenuItem('sabah')">
-        <span>＋</span> Yemek Ekle
+        <span>ï¼‹</span> Yemek Ekle
       </button>
     </div>
 
@@ -528,16 +548,16 @@
       <div class="section-header">
         <div class="section-num">2</div>
         <div class="section-info">
-          <div class="section-title">Küvet Görselleri</div>
-          <div class="section-sub">3×2 tabloya sığdırılır (maks. 6)</div>
+          <div class="section-title">KÃ¼vet GÃ¶rselleri</div>
+          <div class="section-sub">3Ã—2 tabloya sÄ±ÄŸdÄ±rÄ±lÄ±r (maks. 6)</div>
         </div>
         <span class="img-badge zero" id="sabah-kuvet-count">0</span>
       </div>
       <div class="upload-zone">
         <input type="file" accept="image/*" multiple onchange="handleImages('sabah','kuvet',this)">
-        <div class="upload-icon-wrap">📷</div>
-        <div class="upload-label">Küvet fotoğrafları</div>
-        <div class="upload-sub">Galeriden seç veya kamera</div>
+        <div class="upload-icon-wrap">ğŸ“·</div>
+        <div class="upload-label">KÃ¼vet fotoÄŸraflarÄ±</div>
+        <div class="upload-sub">Galeriden seÃ§ veya kamera</div>
       </div>
       <div class="preview-grid" id="sabah-kuvet-preview"></div>
     </div>
@@ -546,16 +566,16 @@
       <div class="section-header">
         <div class="section-num">3</div>
         <div class="section-info">
-          <div class="section-title">Örnek Tepsi Görseli</div>
-          <div class="section-sub">Tek hücreye sığdırılır</div>
+          <div class="section-title">Ã–rnek Tepsi GÃ¶rseli</div>
+          <div class="section-sub">Tek hÃ¼creye sÄ±ÄŸdÄ±rÄ±lÄ±r</div>
         </div>
         <span class="img-badge zero" id="sabah-tepsi-count">0</span>
       </div>
       <div class="upload-zone">
         <input type="file" accept="image/*" onchange="handleImages('sabah','tepsi',this)">
-        <div class="upload-icon-wrap">🍱</div>
-        <div class="upload-label">Örnek tepsi (tek fotoğraf)</div>
-        <div class="upload-sub">Tıkla veya sürükle</div>
+        <div class="upload-icon-wrap">ğŸ±</div>
+        <div class="upload-label">Ã–rnek tepsi (tek fotoÄŸraf)</div>
+        <div class="upload-sub">TÄ±kla veya sÃ¼rÃ¼kle</div>
       </div>
       <div class="preview-single" id="sabah-tepsi-preview"></div>
     </div>
@@ -564,16 +584,16 @@
       <div class="section-header">
         <div class="section-num">4</div>
         <div class="section-info">
-          <div class="section-title">Öğrenci Tepsi Görselleri</div>
-          <div class="section-sub">5×2 tabloya sığdırılır (maks. 10)</div>
+          <div class="section-title">Ã–ÄŸrenci Tepsi GÃ¶rselleri</div>
+          <div class="section-sub">5Ã—2 tabloya sÄ±ÄŸdÄ±rÄ±lÄ±r (maks. 10)</div>
         </div>
         <span class="img-badge zero" id="sabah-ogrenci-count">0</span>
       </div>
       <div class="upload-zone">
         <input type="file" accept="image/*" multiple onchange="handleImages('sabah','ogrenci',this)">
-        <div class="upload-icon-wrap">👨‍🎓</div>
-        <div class="upload-label">Öğrenci tepsi fotoğrafları</div>
-        <div class="upload-sub">Minimum 10 fotoğraf</div>
+        <div class="upload-icon-wrap">ğŸ‘¨â€ğŸ“</div>
+        <div class="upload-label">Ã–ÄŸrenci tepsi fotoÄŸraflarÄ±</div>
+        <div class="upload-sub">Minimum 10 fotoÄŸraf</div>
       </div>
       <div class="preview-grid" id="sabah-ogrenci-preview"></div>
     </div>
@@ -589,16 +609,16 @@
         <div class="section-num">1</div>
         <div class="section-info">
           <div class="section-title">Genel Bilgiler</div>
-          <div class="section-sub">Tarih ve menü öğeleri</div>
+          <div class="section-sub">Tarih ve menÃ¼ Ã¶ÄŸeleri</div>
         </div>
       </div>
       <div class="field-label">Tarih</div>
       <input type="date" class="field-input" id="aksam-tarih">
       <div class="divider"></div>
-      <div class="field-label">Menü Öğeleri</div>
+      <div class="field-label">MenÃ¼ Ã–ÄŸeleri</div>
       <div class="menu-items" id="aksam-menu-items"></div>
       <button class="add-btn" onclick="addMenuItem('aksam')">
-        <span>＋</span> Yemek Ekle
+        <span>ï¼‹</span> Yemek Ekle
       </button>
     </div>
 
@@ -606,16 +626,16 @@
       <div class="section-header">
         <div class="section-num">2</div>
         <div class="section-info">
-          <div class="section-title">Küvet Görselleri</div>
-          <div class="section-sub">3×2 tabloya sığdırılır (maks. 6)</div>
+          <div class="section-title">KÃ¼vet GÃ¶rselleri</div>
+          <div class="section-sub">3Ã—2 tabloya sÄ±ÄŸdÄ±rÄ±lÄ±r (maks. 6)</div>
         </div>
         <span class="img-badge zero" id="aksam-kuvet-count">0</span>
       </div>
       <div class="upload-zone">
         <input type="file" accept="image/*" multiple onchange="handleImages('aksam','kuvet',this)">
-        <div class="upload-icon-wrap">📷</div>
-        <div class="upload-label">Küvet fotoğrafları</div>
-        <div class="upload-sub">Galeriden seç veya kamera</div>
+        <div class="upload-icon-wrap">ğŸ“·</div>
+        <div class="upload-label">KÃ¼vet fotoÄŸraflarÄ±</div>
+        <div class="upload-sub">Galeriden seÃ§ veya kamera</div>
       </div>
       <div class="preview-grid" id="aksam-kuvet-preview"></div>
     </div>
@@ -624,16 +644,16 @@
       <div class="section-header">
         <div class="section-num">3</div>
         <div class="section-info">
-          <div class="section-title">Örnek Tepsi Görseli</div>
-          <div class="section-sub">Tek hücreye sığdırılır</div>
+          <div class="section-title">Ã–rnek Tepsi GÃ¶rseli</div>
+          <div class="section-sub">Tek hÃ¼creye sÄ±ÄŸdÄ±rÄ±lÄ±r</div>
         </div>
         <span class="img-badge zero" id="aksam-tepsi-count">0</span>
       </div>
       <div class="upload-zone">
         <input type="file" accept="image/*" onchange="handleImages('aksam','tepsi',this)">
-        <div class="upload-icon-wrap">🍱</div>
-        <div class="upload-label">Örnek tepsi (tek fotoğraf)</div>
-        <div class="upload-sub">Tıkla veya sürükle</div>
+        <div class="upload-icon-wrap">ğŸ±</div>
+        <div class="upload-label">Ã–rnek tepsi (tek fotoÄŸraf)</div>
+        <div class="upload-sub">TÄ±kla veya sÃ¼rÃ¼kle</div>
       </div>
       <div class="preview-single" id="aksam-tepsi-preview"></div>
     </div>
@@ -642,16 +662,16 @@
       <div class="section-header">
         <div class="section-num">4</div>
         <div class="section-info">
-          <div class="section-title">Öğrenci Tepsi Görselleri</div>
-          <div class="section-sub">5×2 tabloya sığdırılır (maks. 10)</div>
+          <div class="section-title">Ã–ÄŸrenci Tepsi GÃ¶rselleri</div>
+          <div class="section-sub">5Ã—2 tabloya sÄ±ÄŸdÄ±rÄ±lÄ±r (maks. 10)</div>
         </div>
         <span class="img-badge zero" id="aksam-ogrenci-count">0</span>
       </div>
       <div class="upload-zone">
         <input type="file" accept="image/*" multiple onchange="handleImages('aksam','ogrenci',this)">
-        <div class="upload-icon-wrap">👨‍🎓</div>
-        <div class="upload-label">Öğrenci tepsi fotoğrafları</div>
-        <div class="upload-sub">Minimum 10 fotoğraf</div>
+        <div class="upload-icon-wrap">ğŸ‘¨â€ğŸ“</div>
+        <div class="upload-label">Ã–ÄŸrenci tepsi fotoÄŸraflarÄ±</div>
+        <div class="upload-sub">Minimum 10 fotoÄŸraf</div>
       </div>
       <div class="preview-grid" id="aksam-ogrenci-preview"></div>
     </div>
@@ -660,16 +680,16 @@
       <div class="section-header">
         <div class="section-num">5</div>
         <div class="section-info">
-          <div class="section-title">Salatabar Görseli</div>
-          <div class="section-sub">Tek hücreye sığdırılır</div>
+          <div class="section-title">Salatabar GÃ¶rseli</div>
+          <div class="section-sub">Tek hÃ¼creye sÄ±ÄŸdÄ±rÄ±lÄ±r</div>
         </div>
         <span class="img-badge zero" id="aksam-salatabar-count">0</span>
       </div>
       <div class="upload-zone">
         <input type="file" accept="image/*" onchange="handleImages('aksam','salatabar',this)">
-        <div class="upload-icon-wrap">🥗</div>
-        <div class="upload-label">Salatabar (tek fotoğraf)</div>
-        <div class="upload-sub">Tıkla veya sürükle</div>
+        <div class="upload-icon-wrap">ğŸ¥—</div>
+        <div class="upload-label">Salatabar (tek fotoÄŸraf)</div>
+        <div class="upload-sub">TÄ±kla veya sÃ¼rÃ¼kle</div>
       </div>
       <div class="preview-single" id="aksam-salatabar-preview"></div>
     </div>
@@ -680,46 +700,47 @@
 </div>
 <!-- END SCROLL AREA -->
 
-<!-- STATUS NOTICES -->
-<div class="status-notice" id="sabah-status"></div>
-<div class="status-notice" id="aksam-status"></div>
-
-<!-- DOWNLOAD BTNS -->
-<button class="download-btn" id="sabah-download-btn" onclick="triggerDownload('sabah')">
-  ⬇️ Word Dosyasını İndir
-</button>
-<button class="download-btn" id="aksam-download-btn" onclick="triggerDownload('aksam')">
-  ⬇️ Word Dosyasını İndir
-</button>
-
-<!-- GENERATE BTN -->
-<div class="generate-wrap" id="sabah-gen-wrap">
-  <button class="generate-btn" onclick="generateDoc('sabah')" id="sabah-gen-btn">
-    📄 Word Belgesi Oluştur
+<!-- FIXED ACTION BAR (above bottom nav) -->
+<div class="action-bar" id="action-bar">
+  <!-- Status notice -->
+  <div class="status-notice" id="sabah-status"></div>
+  <div class="status-notice" id="aksam-status"></div>
+  <!-- Download buttons -->
+  <button class="download-btn" id="sabah-download-btn" onclick="triggerDownload('sabah')">
+    â¬‡ï¸ Word DosyasÄ±nÄ± Ä°ndir
   </button>
-</div>
-<div class="generate-wrap" id="aksam-gen-wrap" style="display:none">
-  <button class="generate-btn" onclick="generateDoc('aksam')" id="aksam-gen-btn">
-    📄 Word Belgesi Oluştur
+  <button class="download-btn" id="aksam-download-btn" onclick="triggerDownload('aksam')">
+    â¬‡ï¸ Word DosyasÄ±nÄ± Ä°ndir
   </button>
+  <!-- Generate buttons -->
+  <div id="sabah-gen-wrap">
+    <button class="generate-btn" onclick="generateDoc('sabah')" id="sabah-gen-btn">
+      ğŸ“„ Word Belgesi OluÅŸtur
+    </button>
+  </div>
+  <div id="aksam-gen-wrap" style="display:none">
+    <button class="generate-btn" onclick="generateDoc('aksam')" id="aksam-gen-btn">
+      ğŸ“„ Word Belgesi OluÅŸtur
+    </button>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
   <div class="nav-item active" onclick="showNavSection('home')" id="nav-home">
-    <div class="nav-icon">🏠</div>
+    <div class="nav-icon">ğŸ </div>
     <span class="nav-label">Ana Sayfa</span>
   </div>
   <div class="nav-item" onclick="showNavSection('photo')" id="nav-photo">
-    <div class="nav-icon">📷</div>
-    <span class="nav-label">Fotoğraf</span>
+    <div class="nav-icon">ğŸ“·</div>
+    <span class="nav-label">FotoÄŸraf</span>
   </div>
   <div class="nav-item" onclick="showNavSection('doc')" id="nav-doc">
-    <div class="nav-icon">📄</div>
+    <div class="nav-icon">ğŸ“„</div>
     <span class="nav-label">Belge</span>
   </div>
   <div class="nav-item" onclick="showNavSection('settings')" id="nav-settings">
-    <div class="nav-icon">⚙️</div>
+    <div class="nav-icon">âš™ï¸</div>
     <span class="nav-label">Ayarlar</span>
   </div>
 </div>
@@ -772,11 +793,11 @@ function showNavSection(section) {
     document.getElementById('nav-'+s).classList.toggle('active', s===section);
   });
   if(section === 'photo') {
-    showToast('📷 Kamera bölümüne gidiliyor...');
+    showToast('ğŸ“· Kamera bÃ¶lÃ¼mÃ¼ne gidiliyor...');
   } else if(section === 'doc') {
-    showToast('📄 Son belgeler yükleniyor...');
+    showToast('ğŸ“„ Son belgeler yÃ¼kleniyor...');
   } else if(section === 'settings') {
-    showToast('⚙️ Ayarlar yakında eklenecek');
+    showToast('âš™ï¸ Ayarlar yakÄ±nda eklenecek');
   }
 }
 
@@ -800,8 +821,8 @@ window.onload = function() {
   var today = new Date().toISOString().split('T')[0];
   document.getElementById('sabah-tarih').value = today;
   document.getElementById('aksam-tarih').value  = today;
-  var sabahItems = ['BEYAZ PEYNİR','DOMATES – SALATA','YEŞİL – SİYAH ZEYTİN','TAHİN PEKMEZİ – KREM PEYNİR','POĞAÇA – SUCUKLU YUMURTA'];
-  var aksamItems = ['TEL ŞEHRİYE ÇORBASI','PİDELİ KÖFTE','KARIŞIK SEBZE BUKETİ','GAZLI İÇECEK'];
+  var sabahItems = ['BEYAZ PEYNÄ°R','DOMATES â€“ SALATA','YEÅÄ°L â€“ SÄ°YAH ZEYTÄ°N','TAHÄ°N PEKMEZÄ° â€“ KREM PEYNÄ°R','POÄAÃ‡A â€“ SUCUKLU YUMURTA'];
+  var aksamItems = ['TEL ÅEHRÄ°YE Ã‡ORBASI','PÄ°DELÄ° KÃ–FTE','KARIÅIK SEBZE BUKETÄ°','GAZLI Ä°Ã‡ECEK'];
   sabahItems.forEach(function(i){ addMenuItem('sabah', i); });
   aksamItems.forEach(function(i){ addMenuItem('aksam', i); });
 };
@@ -814,11 +835,11 @@ function addMenuItem(prefix, value) {
   var inp = document.createElement('input');
   inp.type = 'text';
   inp.className = 'field-input';
-  inp.placeholder = 'Yemek adı...';
+  inp.placeholder = 'Yemek adÄ±...';
   inp.value = value;
   var btn = document.createElement('button');
   btn.className = 'remove-btn';
-  btn.textContent = '×';
+  btn.textContent = 'Ã—';
   btn.onclick = function(){ row.parentNode.removeChild(row); };
   row.appendChild(inp); row.appendChild(btn);
   c.appendChild(row);
@@ -851,7 +872,7 @@ function handleFilesRaw(prefix, field, files) {
     else { state[prefix][field] = state[prefix][field].concat(imgs); }
     renderPreviews(prefix, field);
     updateCount(prefix, field);
-    showToast('✅ ' + imgs.length + ' görsel yüklendi');
+    showToast('âœ… ' + imgs.length + ' gÃ¶rsel yÃ¼klendi');
   });
 }
 
@@ -870,7 +891,7 @@ function renderPreviews(prefix, field) {
     imgs.forEach(function(imgObj, i) {
       var div = document.createElement('div'); div.className = 'preview-item';
       var img = document.createElement('img'); img.src = imgObj.data;
-      var btn = document.createElement('button'); btn.className = 'preview-remove'; btn.textContent = '×';
+      var btn = document.createElement('button'); btn.className = 'preview-remove'; btn.textContent = 'Ã—';
       btn.onclick = (function(p,f,idx){ return function(){ removeImage(p,f,idx); }; })(prefix,field,i);
       div.appendChild(img); div.appendChild(btn); grid.appendChild(div);
     });
@@ -937,10 +958,10 @@ async function generateDoc(prefix) {
   var status = document.getElementById(prefix+'-status');
   var dlBtn = document.getElementById(prefix+'-download-btn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner">⏳</span> Oluşturuluyor...';
+  btn.innerHTML = '<span class="spinner">â³</span> OluÅŸturuluyor...';
   dlBtn.classList.remove('visible');
   status.className = 'status-notice loading';
-  status.innerHTML = '⏳ Şablon açılıyor...';
+  status.innerHTML = 'â³ Åablon aÃ§Ä±lÄ±yor...';
   try {
     if (!window.JSZip) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
     var isAksam = prefix === 'aksam';
@@ -951,7 +972,7 @@ async function generateDoc(prefix) {
     var docXml = await zip.file('word/document.xml').async('string');
     docXml = docXml.replace('<w:t>Tarih:<\/w:t>', '<w:t>Tarih:'+formatDate(tarih)+'<\/w:t>');
     docXml = updateMenuItems(docXml, getMenuItems(prefix));
-    status.innerHTML = '⏳ Görseller yerleştiriliyor...';
+    status.innerHTML = 'â³ GÃ¶rseller yerleÅŸtiriliyor...';
     var kuvetImgs = state[prefix].kuvet.slice(0,6);
     var tepsiImgs = state[prefix].tepsi.slice(0,1);
     var ogrenciImgs = state[prefix].ogrenci.slice(0,10);
@@ -983,24 +1004,24 @@ async function generateDoc(prefix) {
       }
     });
     zip.file('[Content_Types].xml', ctXml);
-    docXml = fillTableCells(docXml,'KÜVET',kuvetRIds,kuvetImgs,CELL_SIZES.kuvet);
+    docXml = fillTableCells(docXml,'KÃœVET',kuvetRIds,kuvetImgs,CELL_SIZES.kuvet);
     if (tepsiRId) docXml = fillSingleCell(docXml,'TEPSI',tepsiRId,tepsiImgs[0],CELL_SIZES.tepsi);
     docXml = fillTableCells(docXml,'OGRENCI',ogrRIds,ogrenciImgs,CELL_SIZES.ogrenci);
     if (isAksam && sltRId) docXml = fillSingleCell(docXml,'SALATABAR',sltRId,sltImgs[0],CELL_SIZES.salatabar);
     zip.file('word/document.xml', docXml);
-    status.innerHTML = '⏳ Dosya hazırlanıyor...';
+    status.innerHTML = 'â³ Dosya hazÄ±rlanÄ±yor...';
     var blob = await zip.generateAsync({ type:'blob', mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', compression:'DEFLATE' });
     downloadBlobs[prefix] = blob;
     status.className = 'status-notice success';
-    status.innerHTML = '✅ Belge hazır! Aşağıdan indirin.';
+    status.innerHTML = 'âœ… Belge hazÄ±r! AÅŸaÄŸÄ±dan indirin.';
     dlBtn.classList.add('visible');
-    showToast('✅ Word belgesi oluşturuldu!');
+    showToast('âœ… Word belgesi oluÅŸturuldu!');
   } catch(err) {
     status.className = 'status-notice error';
-    status.innerHTML = '❌ Hata: ' + err.message;
+    status.innerHTML = 'âŒ Hata: ' + err.message;
   }
   btn.disabled = false;
-  btn.innerHTML = '📄 Word Belgesi Oluştur';
+  btn.innerHTML = 'ğŸ“„ Word Belgesi OluÅŸtur';
 }
 
 function triggerDownload(prefix) {
@@ -1008,7 +1029,7 @@ function triggerDownload(prefix) {
   var tarih = document.getElementById(prefix+'-tarih').value.replace(/-/g,'_');
   var label = prefix==='aksam' ? 'AKSAM_YEMEGI' : 'SABAH_KAHVALTISI';
   saveAs(downloadBlobs[prefix], tarih+'_'+label+'.docx');
-  showToast('⬇️ İndirme başladı');
+  showToast('â¬‡ï¸ Ä°ndirme baÅŸladÄ±');
 }
 
 function updateMenuItems(docXml, items) {
@@ -1035,7 +1056,7 @@ function updateMenuItems(docXml, items) {
 
 function fillTableCells(docXml, type, rIds, imgObjs, cellSize) {
   if (!rIds.length) return docXml;
-  var anchor = type==='KÜVET' ? 'SERVİS EDİLMEK' : 'EN AZ 10 ADET';
+  var anchor = type==='KÃœVET' ? 'SERVÄ°S EDÄ°LMEK' : 'EN AZ 10 ADET';
   var aPos = docXml.indexOf(anchor); if (aPos===-1) return docXml;
   var tStart = docXml.indexOf('<w:tbl>', aPos); if (tStart===-1) return docXml;
   var tEnd = findTblEnd(docXml, tStart), tbl = docXml.slice(tStart, tEnd), idx=0;
@@ -1051,7 +1072,7 @@ function fillTableCells(docXml, type, rIds, imgObjs, cellSize) {
 }
 
 function fillSingleCell(docXml, type, rId, imgObj, cellSize) {
-  var anchor = type==='TEPSI' ? 'ÖRNEK YEMEK' : '>SALATABAR<';
+  var anchor = type==='TEPSI' ? 'Ã–RNEK YEMEK' : '>SALATABAR<';
   var aPos = docXml.indexOf(anchor); if (aPos===-1) return docXml;
   var tStart = docXml.indexOf('<w:tbl>', aPos); if (tStart===-1) return docXml;
   var tEnd = findTblEnd(docXml, tStart), tbl = docXml.slice(tStart, tEnd);
