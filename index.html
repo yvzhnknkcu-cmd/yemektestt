@@ -863,7 +863,7 @@ const downloadBlobs = { sabah:null, aksam:null };
 
 function checkPassword() {
   var input = document.getElementById('pw-input').value;
-  if(input === 'Jesuis0535') {
+  if(input === '0000') {
     document.getElementById('password-screen').style.display = 'none';
     sessionStorage.setItem('auth', '1');
   } else {
@@ -909,7 +909,7 @@ window.onload = function() {
   document.getElementById('sabah-tarih').value = today;
   document.getElementById('aksam-tarih').value  = today;
   var sabahItems = ['BEYAZ PEYNİR','DOMATES – SALATA','YEŞİL – SİYAH ZEYTİN','TAHİN PEKMEZİ – KREM PEYNİR','POĞAÇA – SUCUKLU YUMURTA'];
-  var aksamItems = ['TEL ŞEHRİYE ÇORBASI','PİDELİ KÖFTE','KARIŞIK SEBZE BUKETİ','GAZLI İÇECEK'];
+  var aksamItems = ['','','',''];
   sabahItems.forEach(function(i){ addMenuItem('sabah', i); });
   aksamItems.forEach(function(i){ addMenuItem('aksam', i); });
 };
