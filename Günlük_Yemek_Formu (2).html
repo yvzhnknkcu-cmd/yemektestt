@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Günlük Yemek Formu</title>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.6.1/dist/index.iife.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1b1f24;--mu:#667085;--ln:#e2e5ea;--ac:#c8102e;--ac2:#fde8ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161a;--card:#1e2126;--tx:#eceff3;--mu:#98a2b3;--ln:#31363d;--ac:#ff5a73;--ac2:#3a1f26}}
+:root[data-theme="dark"]{--bg:#14161a;--card:#1e2126;--tx:#eceff3;--mu:#98a2b3;--ln:#31363d;--ac:#ff5a73;--ac2:#3a1f26}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:110px}
+main{max-width:560px;margin:0 auto;padding:14px}
+h1{font-size:19px;margin:6px 0 12px}h2{font-size:14px;margin:0 0 8px;color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px;margin-bottom:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.seg button{padding:12px;border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:12px;font:600 15px inherit;font-family:inherit}
+.seg button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.row{display:flex;gap:8px;align-items:center}
+input[type=date],input[type=text]{width:100%;padding:11px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx);font:16px inherit;font-family:inherit}
+.nav{flex:0 0 46px;height:46px;border:1px solid var(--ln);border-radius:10px;background:var(--card);color:var(--tx);font-size:20px}
+.it{display:flex;gap:8px;align-items:center;margin-bottom:6px}.it b{flex:0 0 34px;color:var(--ac);font-size:13px}
+.slot{border-top:1px solid var(--ln);padding:10px 0}.slot:first-of-type{border-top:0}
+.sl{font-weight:600;font-size:14px;margin-bottom:6px}.sl small{display:block;color:var(--mu);font-weight:400}
+.add{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border-radius:10px;background:var(--ac2);color:var(--ac);font-weight:600;font-size:14px}
+.add input{display:none}
+.th{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.th div{position:relative;width:72px;height:72px}.th img{width:100%;height:100%;object-fit:cover;border-radius:8px;border:1px solid var(--ln)}
+.th button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#111;color:#fff;font-size:13px;line-height:1}
+label.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--mu);margin-top:10px}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--ln)}
+.bar>div{max-width:560px;margin:0 auto}
+.go{width:100%;padding:15px;border:0;border-radius:12px;background:var(--ac);color:#fff;font:700 16px inherit;font-family:inherit}.go:disabled{opacity:.5}
+#st{font-size:13px;color:var(--mu);text-align:center;margin-top:6px;min-height:18px}
+.empty{color:var(--mu);font-size:14px}
+details.card summary{font-weight:600;font-size:15px;cursor:pointer}
+.hint{font-size:13px;color:var(--mu);margin:8px 0;line-height:1.45}
+.xb{border:0;font-family:inherit;cursor:pointer}
+.lnk{background:none;border:0;color:var(--mu);text-decoration:underline;font:13px inherit;font-family:inherit;padding:8px 0 0;cursor:pointer}
+#xs{color:var(--tx)}
+</style></head><body><main>
+<h1>🍽️ Günlük Yemek Formu</h1>
+<div class="seg"><button id="ta">Akşam Yemeği</button><button id="tk">Sabah Kahvaltısı</button></div>
+<div class="card"><h2>Tarih</h2><div class="row"><button class="nav" id="pv">‹</button><input type="date" id="dt"><button class="nav" id="nx">›</button></div>
+<label class="chk"><input type="checkbox" id="al"> Alerjen kodlarını göster, ör. (1,3,4)</label></div>
+<details class="card" id="xl"><summary>📥 Aylık menü yükle (Excel)</summary>
+<div class="hint">Her ay belediyenin onaylı menü Excel dosyasını (AKŞAM MENÜ ve KAHVALTI sayfaları) olduğu gibi yükleyin; menü tarihe göre otomatik gelir. Aynı tarihler tekrar yüklenirse güncellenir, önceki aylar silinmez.</div>
+<div class="row" style="flex-wrap:wrap"><label class="add">📂 Excel dosyası seç<input type="file" id="xf" accept=".xlsx,.xls"></label></div>
+<div class="hint" id="xs"></div><div class="hint" id="xi"></div>
+<button type="button" class="lnk" id="xc">Yüklenen menüleri sil</button></details>
+<div id="app"></div>
+</main>
+<div class="bar"><div><button class="go" id="go">Word dosyasını oluştur</button><div id="st"></div></div></div>
+<script>
+const DATA={"2026-10-01":{"a":["DÜĞÜN ÇORBA (1,3,4,8)","GEMİCİ USULÜ KURU FASULYE (1,8)","SADE PİRİNÇ PİLAVI (1)","MEYVE (MUZ)"],"s":["PEMBE SULTAN (4,12)","Z.YAĞLI KABAK KALYE (1)","GAVURDAĞI SALATASI (7,11)","KARIŞIK TURŞU (12)","DOM.SOSLU KARIŞIK KIZART. (BİBER-PATATES) (1)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÇEÇİL PEYNİR (4)","TAHİN PEKMEZ (14)","POĞAÇA(1,3,4,14)","MENEMEN (3)"]},"2026-10-02":{"a":["ŞEHRİYE ÇORBASI (1,3,4,8)","PATLICAN MUSAKKA (1,4)","NOHUTLU BULGUR PİLAVI (1,8)","LİMONATA"],"s":["KURU CACIK (4)","KARIŞIK SALATA (KIRMIZI LAHANA-MISIRLI YEŞİL ZEYTİN) (8,12)","KÖZ SOGAN SALATASI","MAYDANOZLU KÖZLENMİŞ KIRMIZI BİBER SALATASI (12)","PATATES SALATASI (1,12)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÖRGÜ PEYNİR (4)","HELVA(1,4,14)","PATATES HAŞLAMA (1,12)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-03":{"a":["MERCİMEK ÇORBASI (1,8)","SEBZELİ MİSKET KÖFTE (1,3,4,8)","TEL ŞEHRİYELİ PİRİNÇ PİLAVI (1)","SÜTLÜ TATLI (1,3,4)"],"s":["YOĞURT (4)","MÜCVER (1,3)","MAYDANOZLU KÖZLENMİŞ PATLICAN SALATASI (12)","KORNİŞON TURŞU (12)","Z.YAĞLI ORBİT FASULYE (1,8)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KREM PEYNİR (4)","VİŞNE REÇELİ (12)","SİMİT (1,3,4,14)","KAŞARLI OMLET (3,4)"]},"2026-10-04":{"a":["MISIR ÇORBASI (1,3,4,8)","MANTARLI TAVUK SOTE (2,13)","FESLEĞEN SOSLU SPAGETTİ (1,3,4)","ŞÖBİYET (1,3,4,7,8,11)"],"s":["KARIŞIK SALATA(KIRMIZI LAHANA-HAVUÇ) (12)","HAYDARİ (4)","SÖĞÜŞ DİLİM (DOM-SALATALIK)","SOSLU PATATES KIZARTMASI (1)","ŞAKŞUKA"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KAŞAR PEYNİR (4)","KAKAOLU FINDIK EZMESİ (1,4,8,11)","PATATES KIZARTMASI (1)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-05":{"a":["ŞEHRİYE ÇORBASI (1,3,4,8)","BELEN TAVA","SADE PİRİNÇ PİLAVI (1)","AYRAN (4)"],"s":["MAYDANOZLU KÖZLENMİŞ KIRMIZI BİBER SALATASI (12)","ÇOBAN SALATASI","BEYAZ LAHANA TURŞUSU (12)","PATATES SALATASI (1,12)","Z.YAĞLI BARBUNYA (1,8)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÖRGÜ PEYNİR (4)","TAHİN PEKMEZ (14)","AÇMA (1,3,4,14)","MENEMEN (3)"]},"2026-10-06":{"a":["EZOGELİN ÇORBA (1,8)","TAZE FASULYE (8)","MANTI (1,3,4)","MEYVE (MUZ)"],"s":["SUMAKLI SOĞAN","KARIŞIK SALATA(KIRMIZI LAHANA-HAVUÇ) (12)","KARIŞIK KIZARTMA (PATLICAN-KABAK)","GAVURDAĞI SALATASI (7,11)","VİŞNELİ YAPRAK SARMA (1,7,8,10,11,12,14)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","SALAM (1,3,4,6,8,9)","HELVA(1,4,14)","PEYNİRLİ KALEM BÖREK(1,3,4)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-07":{"a":["SEBZE ÇORBASI (1,3,4,8)","HAMBURGER / ÇITIR PATATES (1,3,4,8,12,14)","TEL KADAYIF (1,3,4,11)","GAZLI İÇECEK"],"s":["HAVUÇ TARATOR (3,4)","KÖZ SOGAN SALATASI","MAYDANOZLU KÖZLENMİŞ PATLICAN SALATASI (12)","DEREOTLU MISIRLI YEŞİL ZEYTİN SALATASI","HUMUS (1,8,14)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÇEÇİL PEYNİR (4)","ÇİLEK REÇELİ (12)","PATATES HAŞLAMA (1,12)","SADE OMLET (3)"]},"2026-10-08":{"a":["MERCİMEK ÇORBASI (1,8)","FIRINDA TAVUK BUT / PATATES KROKET (1,4)","NAPOLİTEN SOSLU SPAGETTİ (1,3,4)","SOĞUK ÇAY"],"s":["HAYDARİ (4)","KARIŞIK SALATA (KIRMIZI LAHANA-MISIRLI YEŞİL ZEYTİN) (8,12)","Z.YAĞLI KABAK KALYE (1)","ÇOBAN SALATASI","BİBER KIZART."],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","TEREYAĞ(4)","BAL","SİMİT (1,3,4,14)","SUCUKLU YUMURTA (3)"]},"2026-10-09":{"a":["KROTONLU ÇORBA (1,3,4,8)","HÜNKAR BEĞENDİ (1,3,4,7,11)","ARPA ŞEHRİYELİ PİRİNÇ PİLAVI (1)","SÜTLÜ TATLI (1,3,4)"],"s":["KÖZ SOGAN SALATASI","YOĞURT (4)","GAVURDAĞI SALATASI (7,11)","SOSLU PATATES KIZARTMASI (1)","PİYAZ (1,3,8,14)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KAŞAR PEYNİR (4)","KAYISI REÇELİ (12)","PATATES KIZARTMASI (1)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-10":{"a":["EZOGELİN ÇORBA (1,8)","ETLİ NOHUT (1,8)","SADE PİRİNÇ PİLAVI (1)","SARAY SARMASI(1,3,4,7,8,11)"],"s":["CACIK (4)","ŞAKŞUKA","KARIŞIK SALATA(KIRMIZI LAHANA-HAVUÇ) (12)","KARIŞIK TURŞU (12)","PATATES SALATASI (1,12)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÖRGÜ PEYNİR (4)","KAKAOLU FINDIK EZMESİ (1,4,8,11)","POĞAÇA(1,3,4,14)","PEYNİRLİ OMLET (3,4)"]},"2026-10-11":{"a":["DÜĞÜN ÇORBA (1,3,4,8)","TAVUK HAŞLAMA (1,3,4,8)","SADE KUSKUS MAKARNA (1)","MEYVE (ELMA)"],"s":["PEMBE SULTAN (4,12)","SUMAKLI SOĞAN","MAYDANOZLU KÖZLENMİŞ KIRMIZI BİBER SALATASI (12)","SÖĞÜŞ DİLİM (DOM-SALATALIK)","Z.YAĞLI ORBİT FASULYE (1,8)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KREM PEYNİR (4)","TAHİN PEKMEZ (14)","SU BÖREĞİ(1,3,4)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-12":{"a":["MERCİMEK ÇORBASI (1,8)","PİDELİ KÖFTE IZGARA (1,3,4)","HAVUÇ DİLİM BAKLAVA (1,3,4,7,8,11)","GAZLI İÇECEK"],"s":["HUMUS (1,8,14)","KARIŞIK SALATA (KIRMIZI LAHANA-MISIRLI YEŞİL ZEYTİN) (8,12)","MAYDANOZLU KÖZLENMİŞ PATLICAN SALATASI (12)","KÖZ SOGAN SALATASI","Z.YAĞLI YAPRAK SARMA (1,7,8,10,11,12,14)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","JAMBON (1,3,4,6,8,9)","GÜL REÇELİ (12)","SİMİT (1,3,4,14)","SADE OMLET (3)"]},"2026-10-13":{"a":["ŞEHRİYE ÇORBASI (1,3,4,8)","PİLİÇ KÜLBASTI / RENKLİ BİBERLİ MANTAR SOTE (1,3,4,7,11,13)","MISIRLI PİRİNÇ PİLAVI (1,8)","SOĞUK ÇAY"],"s":["HAYDARİ (4)","MAYDANOZLU KÖZLENMİŞ KIRMIZI BİBER SALATASI (12)","SOSLU PATATES KIZARTMASI (1)","ÇOBAN SALATASI","Z.YAĞLI KABAK KALYE (1)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÇEÇİL PEYNİR (4)","KAKAOLU FINDIK EZMESİ (1,4,8,11)","PATATES HAŞLAMA (1,12)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-14":{"a":["DÜĞÜN ÇORBA (1,3,4,8)","PATATESLİ HAVUÇLU BEZELYE YEMEĞİ (1,3,4,8)","SADE PİRİNÇ PİLAVI (1)","MEYVE (MANDALİNA)"],"s":["YOĞURT (4)","ARPA ŞEHRİYE SALATASI (1,7,8,10,12)","KÖZ SOGAN SALATASI","PANCAR TURŞUSU (12)","ŞAKŞUKA"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KAŞAR PEYNİR (4)","TAHİN PEKMEZ (14)","AÇMA (1,3,4,14)","MENEMEN (3)"]},"2026-10-15":{"a":["MERCİMEK ÇORBASI (1,8)","ŞEHZADE KEBABI (1)","NOHUTLU BULGUR PİLAVI (1,8)","SÜTLÜ TATLI (1,3,4)"],"s":["CACIK (4)","KARIŞIK SALATA (KIRMIZI LAHANA-MISIRLI YEŞİL ZEYTİN) (8,12)","PATATES SALATASI (1,12)","KARIŞIK TURŞU (12)","Z.YAĞLI TAZE FASULYE (1,8)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÖRGÜ PEYNİR (4)","HELVA(1,4,14)","ISPANAKLI KOL BÖREĞİ (1,3,4,14)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-16":{"a":["SEBZE ÇORBASI (1,3,4,8)","TAVUK SOTE","NAPOLİTEN SOSLU MAKARNA (1,3,4)","ŞEKERPARE (1,3,7,8,11)"],"s":["KÖZ SOGAN SALATASI","YOĞURTLU BİBER BORANİ (4)","KARIŞIK SALATA(KIRMIZI LAHANA-HAVUÇ) (12)","MAYDANOZLU KÖZLENMİŞ PATLICAN SALATASI (12)","BAŞBAŞI SALATASI (1,7,8,10,11,12)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","TEREYAĞ(4)","BAL","POĞAÇA(1,3,4,14)","SUCUKLU YUMURTA (3)"]},"2026-10-17":{"a":["MISIR ÇORBASI (1,3,4,8)","ET DÖNER / FIRINLANMIŞ ELMA DİLİM PATATES (1,4)","SADE PİRİNÇ PİLAVI (1)","AYRAN (4)"],"s":["GAVURDAĞI SALATASI (7,11)","PİYAZ (1,3,8,14)","KIRMIZI LAHANA (12)","MÜCVER (1,3)","BİBER KIZARTMASI"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KAŞAR PEYNİR (4)","VİŞNE REÇELİ (12)","SU BÖREĞİ(1,3,4)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-18":{"a":["KROTONLU ÇORBA (1,3,4,8)","ETLİ KURU FASULYE (1,8)","TEL ŞEHRİYELİ PİRİNÇ PİLAVI (1)","MEYVE (ARMUT)"],"s":["DEREOTLU YOĞURT SALATASI (3,4)","KARIŞIK SALATA (KIRMIZI LAHANA-MISIRLI YEŞİL ZEYTİN) (8,12)","Z.YAĞLI KABAK KALYE (1)","KARIŞIK TURŞU (12)","PATATES SALATASI (1,12)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","LABNE PEYNİR (4)","KAKAOLU FINDIK EZMESİ (1,4,8,11)","PATATES KIZARTMASI (1)","KAŞARLI OMLET (3,4)"]},"2026-10-19":{"a":["EZOGELİN ÇORBA (1)","PATLICAN BEĞENDİ YATAĞINDA IZGARA TAVUK GÖĞÜS (1,3,4,7,11)","FESLEĞEN SOSLU SPAGETTİ (1,3,4)","SOĞUK ÇAY"],"s":["BROKOLİ HAŞLAMA (1,3,4,12)","ÇERİ DOMATES-SALATALIK / KABAK ÇEKİRDEKLİ AKDENİZ YEŞİLLİĞİ / KUŞ ÜZÜMLÜ HAVUÇ SALATASI (7,8,11,12)","PEMBE SULTAN (4,12)","MEKSİKA FASULYESİ SALATASI / SADE BASMATİ (1,3,4,8,14)","FALAFEL / SOS (1,3,4,8,10,11,12,14)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÇEÇİL PEYNİR (4)","HELVA(1,4,14)","PEYNİRLİ KALEM BÖREK(1,3,4)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-20":{"a":["SEBZE ÇORBASI (1,3,4,8)","PATATES OTURTMA (1,4)","BEZELYELİ BULGUR PİLAVI (1,8)","TEL KADAYIF (1,3,4,11)"],"s":["Z.YAĞLI ORBİT FASULYE (1,8)","CACIK (4)","SUMAKLI SOĞAN","KARIŞIK SALATA(KIRMIZI LAHANA-HAVUÇ) (12)","ŞAKŞUKA"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","TEREYAĞ(4)","BAL","AÇMA (1,3,4,14)","MENEMEN (3)"]},"2026-10-21":{"a":["MERCİMEK ÇORBASI (1,8)","MACAR GULAŞ (1,3,4,8)","TEL ŞEHRİYELİ PİRİNÇ PİLAVI (1)","SÜTLÜ TATLI (1,3,4)"],"s":["HUMUS (1,8,14)","ÇOBAN SALATASI","HAYDARİ (4)","KARIŞIK SALATA (KIRMIZI LAHANA-MISIRLI YEŞİL ZEYTİN) (8,12)","Z.YAĞLI KABAK KALYE (1)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÖRGÜ PEYNİR (4)","TAHİN PEKMEZ (14)","ISPANAKLI GÜL BÖREĞİ (1,3,4,14)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-22":{"a":["DÜĞÜN ÇORBA (1,3,4,8)","GEMİCİ USULÜ KURU FASULYE (1,8)","SADE PİRİNÇ PİLAVI (1)","MEYVE (MUZ)"],"s":["DEREOTLU YOĞURT SALATASI (3,4)","BEYAZ LAHANA TURŞUSU (12)","DOM.SOSLU KARIŞIK KIZART. (BİBER-PATATES) (1)","MAYDANOZLU KÖZLENMİŞ PATLICAN SALATASI (12)","Z.YAĞLI PIRASA (1)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KREM PEYNİR (4)","KAYISI REÇELİ (12)","PATATES HAŞLAMA (1,12)","SUCUKLU YUMURTA (3)"]},"2026-10-23":{"a":["EZOGELİN ÇORBA (1,8)","MANTAR SOSLU BİFTEK / PATATES PÜRESİ (1,2,3,4,13)","SU BÖREĞİ(1,3,4)","GAZLI İÇECEK"],"s":["YOĞURT (4)","GAVURDAĞI SALATASI (7,11)","KÖZ SOGAN SALATASI","MAYDANOZLU KÖZLENMİŞ KIRMIZI BİBER SALATASI (12)","Z.YAĞLI BARBUNYA (1,8)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KAŞAR PEYNİR (4)","HELVA(1,4,14)","SALAM (1,3,4,6,8,9)","SADE OMLET (3)"]},"2026-10-24":{"a":["DOMATES ÇORBASI (1,3,4,8)","ARPACIK SOĞANLI TAVUK YAHNİ (1,3,4,8)","HAVUÇLU BEZELYELİ KUSKUS MAKARNA (1,8)","SARI BURMA (1,3,4,7,8,11)"],"s":["KARIŞIK TURŞU (12)","YOĞURTLU BİBER BORANİ (4)","Z.YAĞLI TAZE FASULYE (1,8)","KARIŞIK SALATA (KIRMIZI LAHANA-MISIRLI YEŞİL ZEYTİN) (8,12)","PATATES SALATASI (1,12)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÇEÇİL PEYNİR (4)","KAKAOLU FINDIK EZMESİ (1,4,8,11)","PATATES KIZARTMASI (1)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-25":{"a":["ŞEHRİYE ÇORBASI (1,3,4,8)","TAS KEBAP (1,8)","NOHUTLU PİRİNÇ PİLAVI (1,8)","MEYVE (MANDALİNA)"],"s":["HAVUÇ TARATOR (3,4)","MAYDANOZLU KÖZLENMİŞ KIRMIZI BİBER SALATASI (12)","SUMAKLI SOĞAN","SÖĞÜŞ DİLİM (DOM-SALATALIK)","ŞAKŞUKA"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","TEREYAĞ(4)","ÇİLEK REÇELİ (12)","SİMİT (1,3,4,14)","PEYNİRLİ OMLET (3,4)"]},"2026-10-26":{"a":["TARHANA ÇORBASI (1,3,4,8)","JÜLYEN SEBZE SOTE (1,8)","MANTI (1,3,4)","LİMONATA"],"s":["KIRMIZI LAHANA (12)","PİYAZ (1,3,8,14)","ÇOBAN SALATASI","MERCİMEK KÖFTE (1,8,12)","Z.YAĞLI BROKOLİ SALATASI (1,3,4,8,14)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÖRGÜ PEYNİR (4)","TAHİN PEKMEZ (14)","PATATESLİ KOL BÖREĞİ (1,3,4,14)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-27":{"a":["MERCİMEK ÇORBASI (1,8)","HAMBURGER / ÇITIR PATATES (1,3,4,8,12,14)","CEVİZLİ BAKLAVA (1,3,4,7,8,11)","GAZLI İÇECEK"],"s":["KÖZ SOGAN SALATASI","PEMBE SULTAN (4,12)","MAYDANOZLU KÖZLENMİŞ KIRMIZI BİBER SALATASI (12)","DEREOTLU MISIRLI YEŞİL ZEYTİN SALATASI","HUMUS (1,8,14)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","LABNE PEYNİR (4)","HELVA(1,4,14)","POĞAÇA(1,3,4,14)","KAŞARLI OMLET (3,4)"]},"2026-10-28":{"a":["DÜĞÜN ÇORBA (1,3,4,8)","FIRINDA GARNİTÜRLÜ TAVUK (8)","NAPOLİTEN SOSLU MAKARNA (1,3,4)","MEYVE (MUZ)"],"s":["HAYDARİ (4)","KARIŞIK SALATA (KIRMIZI LAHANA-MISIRLI YEŞİL ZEYTİN) (8,12)","MAYDANOZLU KÖZLENMİŞ PATLICAN SALATASI (12)","SÖĞÜŞ DİLİM (DOM-SALATALIK)","Z.YAĞLI ORBİT FASULYE (1,8)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","TEREYAĞ(4)","BAL","ISPANAKLI GÜL BÖREĞİ (1,3,4,14)","SUCUKLU YUMURTA (3)"]},"2026-10-29":{"a":["EZOGELİN ÇORBA (1,8)","İSKENDER (1,3,4)","KARIŞIK SEBZE BUKETİ (1,3,4,8)","SOĞUK ÇAY"],"s":["Z.YAĞLI BARBUNYA (1,8)","MAYDANOZLU KÖZLENMİŞ KIRMIZI BİBER SALATASI (12)","GAVURDAĞI SALATASI (7,11)","PANCAR TURŞUSU (12)","ŞAKŞUKA"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","KAŞAR PEYNİR (4)","KAKAOLU FINDIK EZMESİ (1,4,8,11)","SU BÖREĞİ(1,3,4)","SADE OMLET (3)"]},"2026-10-30":{"a":["SEBZE ÇORBASI (1,3,4,8)","ETLİ NOHUT (1,8)","SADE PİRİNÇ PİLAVI (1)","FINDIKLI KEMALPAŞA TATLISI / KAYMAK (1,3,4,7,11,12,14)"],"s":["KURU CACIK (4)","SUMAKLI SOĞAN","KARIŞIK TURŞU (12)","SOSLU BİBER KIZART.","PATATES SALATASI (1,12)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","ÇEÇİL PEYNİR (4)","VİŞNE REÇELİ (12)","PATATES KIZARTMASI (1)","HAŞLANMIŞ YUMURTA (3)"]},"2026-10-31":{"a":["MERCİMEK ÇORBASI (1,8)","PATATES PÜRESİ YATAĞINDA ET SOTE (1,3,4)","ARPA ŞEHRİYELİ PİRİNÇ PİLAVI (1)","SÜTLÜ TATLI (1,3,4)"],"s":["YOĞURT (4)","ÇOBAN SALATASI","BEYAZ LAHANA TURŞUSU (12)","MAYDANOZLU KÖZLENMİŞ PATLICAN SALATASI (12)","Z.YAĞLI PIRASA (1)"],"k":["BEYAZ PEYNİR(4)","SİYAH ZEYTİN/YEŞİL ZEYTİN","DOMATES/SALATALIK","JAMBON (1,3,4,6,8,9)","TAHİN PEKMEZ (14)","SİMİT (1,3,4,14)","MENEMEN (3)"]}};
+function buildDoc(d, L) {
+  const { Document, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, AlignmentType, ImageRun, PageBreak, LevelFormat } = L;
+  const C = AlignmentType.CENTER, F = 'Times New Roman';
+  const run = (t, o = {}) => new TextRun({ text: t, bold: o.b, size: o.sz || 24, font: F });
+  const P = (t, o = {}) => new Paragraph({ alignment: o.al ?? C, spacing: { after: o.after ?? 60 }, children: [run(t, o)] });
+  const fit = (im, mw, mh) => { const s = Math.min(mw / im.w, mh / im.h, 1); return { width: Math.round(im.w * s), height: Math.round(im.h * s) }; };
+  const pic = (im, mw, mh) => new Paragraph({ alignment: C, spacing: { before: 60, after: 60 }, children: [new ImageRun({ type: 'jpg', data: im.data, transformation: fit(im, mw, mh) })] });
+  const cell = (kids, w) => new TableCell({ width: { size: w, type: WidthType.DXA }, margins: { top: 80, bottom: 80, left: 100, right: 100 }, children: kids.length ? kids : [new Paragraph('')] });
+  const tbl = (rows, cols, o = {}) => new Table({ width: { size: cols.reduce((a, b) => a + b, 0), type: WidthType.DXA }, columnWidths: cols, alignment: C, rows: rows.map(r => new TableRow({ cantSplit: true, children: r })) });
+  const gap = () => new Paragraph({ spacing: { after: 120 }, children: [] });
+  const bullet = t => new Paragraph({ numbering: { reference: 'b', level: 0 }, spacing: { after: 20 }, children: [run(t, { sz: 22 })] });
+  const ph = d.photos, kids = [];
+
+  kids.push(P('İSTANBUL BÜYÜKŞEHİR BELEDİYESİ', { b: 1 }));
+  kids.push(P(d.type === 'a' ? 'YURT HİZMETLERİ ŞUBE MÜDÜRLÜĞÜ' : 'GENÇLİK VE SPOR MÜDÜRLÜĞÜ', { b: 1 }));
+  kids.push(P('Günlük Yemek Menüsü Görselleri', { b: 1 }));
+  kids.push(P('BAĞCILAR CÜNEYT ARKIN YÜKSEK ÖĞRENİM ERKEK ÖĞRENCİ YURDU', { b: 1, after: 200 }));
+  kids.push(P(d.date, { b: 1, al: AlignmentType.RIGHT, after: 200 }));
+
+  const mrows = [[cell([P('YEMEK MENÜSÜ', { b: 1, after: 0 })], 6400)]];
+  d.menu.forEach(m => mrows.push([cell([P(m, { b: 1, sz: 22, after: 0 })], 6400)]));
+  kids.push(tbl(mrows, [6400]), gap(), gap());
+
+  // Küvet fotoğrafları
+  const cells = [];
+  if (d.type === 'a') d.menu.forEach((m, i) => cells.push(cell([
+    P(m, { b: 1, sz: 22, after: 0 }), P('', { sz: 22 }),
+    ...(ph.m[i] || []).map(im => pic(im, 280, (ph.m[i].length > 1 ? 150 : 290)))], 4750)));
+  else (ph.kuvet || []).forEach(im => cells.push(cell([pic(im, 290, 330)], 4750)));
+  if (cells.length) {
+    const rows = [];
+    for (let i = 0; i < cells.length; i += 2) rows.push([cells[i], cells[i + 1] || cell([], 4750)]);
+    kids.push(tbl(rows, [4750, 4750]));
+  }
+
+  const box = (title, lines, imgs, mh) => tbl([[cell([
+    ...(title ? [P(title, { b: 1, after: 80 })] : []), ...lines,
+    ...imgs.map(im => pic(im, 560, mh))], 9500)]], [9500]);
+
+  kids.push(new Paragraph({ pageBreakBefore: true, alignment: C, spacing: { after: 80 }, children: [run('ÖRNEK YEMEK TEPSİSİ', { b: 1 })] }));
+  kids.push(box('', [], ph.tray || [], 420), gap());
+  if (d.type === 'a') {
+    kids.push(box('YEMEK ADI', d.salat.map(bullet), ph.salat || [], 330), gap());
+    kids.push(box('TATLI VEYA İÇECEK ADI', [P('İÇECEK: ' + (d.icecek || ''), { sz: 22, al: AlignmentType.LEFT }), P('TATLI  : ' + (d.tatli || ''), { sz: 22, al: AlignmentType.LEFT })], ph.tatli || [], 330));
+  }
+
+  return new Document({
+    numbering: { config: [{ reference: 'b', levels: [{ level: 0, format: LevelFormat.BULLET, text: '•', alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 500, hanging: 250 } } } }] }] },
+    sections: [{ properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1000, bottom: 1000, left: 1200, right: 1200 } } }, children: kids }]
+  });
+}
+
+const $=id=>document.getElementById(id);
+const S={type:'a',date:'',st:{}}; // st[key] = {menu,salat,icecek,tatli,ph:{slot:[img]}}
+const strip=s=>s.replace(/\s*\(\s*\d+(?:\s*,\s*\d+)*\s*\)/g,'').replace(/\s+/g,' ').trim();
+const tr=s=>s.toLocaleUpperCase('tr-TR');
+let keys=Object.keys(DATA).sort();
+const fmt=iso=>iso.split('-').reverse().join('.');
+const cur=()=>{const k=S.type+S.date;if(!S.st[k]){const r=DATA[S.date]||{};const m=(S.type==='a'?r.a:r.k)||[];
+  const find=re=>m.map(strip).filter(x=>re.test(x)).join(', ');
+  S.st[k]={menu:m.slice(),salat:(r.s||[]).slice(),icecek:S.type==='a'?find(/AYRAN|ÇAY|İÇECEK|LİMONATA|ŞERBET|MEYVE SUYU/):'',
+   tatli:S.type==='a'?find(/TATLI|BAKLAVA|KADAYIF|ŞEKERPARE|SARMA|BURMA|REVANİ|TULUMBA|PUDİNG|MEYVE/):'',ph:{}}}return S.st[k]};
+const slots=c=>S.type==='a'?[...c.menu.map((m,i)=>['m'+i,'M'+(i+1)+' küvet fotoğrafı',strip(m)]),['tray','Örnek yemek tepsisi'],['salat','Salatbar ürün görseli'],['tatli','Tatlı ve içecek görseli']]
+  :[['kuvet','Küvet fotoğrafları','Hepsini birlikte seçebilirsiniz'],['tray','Örnek yemek tepsisi']];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function render(){
+  $('ta').classList.toggle('on',S.type==='a');$('tk').classList.toggle('on',S.type==='k');
+  const c=cur();if(!DATA[S.date]){$('app').innerHTML='<div class="card empty">Bu tarih için menü bulunamadı. Yukarıdaki “Aylık menü yükle” bölümünden Excel yükleyebilirsiniz.</div>';return}
+  const L=(l,arr)=>arr.map((v,i)=>`<div class="it"><b>${l}${i+1}</b><input type="text" data-l="${l}" data-i="${i}" value="${esc(v)}"></div>`).join('');
+  let h=`<div class="card"><h2>Menü (M alanları)</h2>${L('M',c.menu)}</div>`;
+  if(S.type==='a')h+=`<div class="card"><h2>Salatbar (S alanları)</h2>${L('S',c.salat)}<h2 style="margin-top:12px">Tatlı / İçecek</h2>
+   <div class="it"><b>İÇ.</b><input type="text" data-f="icecek" value="${esc(c.icecek)}"></div><div class="it"><b>TAT.</b><input type="text" data-f="tatli" value="${esc(c.tatli)}"></div></div>`;
+  h+=`<div class="card"><h2>Fotoğraflar</h2>`+slots(c).map(([k,t,sub])=>`<div class="slot"><div class="sl">${esc(t)}${sub?`<small>${esc(sub)}</small>`:''}</div>
+   <label class="add">📷 Fotoğraf ekle<input type="file" accept="image/*" multiple data-s="${k}"></label>
+   <div class="th">${(c.ph[k]||[]).map((im,i)=>`<div><img src="${im.url}"><button data-r="${k}" data-i="${i}">×</button></div>`).join('')}</div></div>`).join('')+'</div>';
+  $('app').innerHTML=h;
+}
+async function prep(f){const b=await createImageBitmap(f);const s=Math.min(1,1400/Math.max(b.width,b.height));const w=Math.round(b.width*s),h=Math.round(b.height*s);
+  const cv=document.createElement('canvas');cv.width=w;cv.height=h;const x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(b,0,0,w,h);
+  const bl=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));return{data:new Uint8Array(await bl.arrayBuffer()),w,h,url:URL.createObjectURL(bl)}}
+$('app').addEventListener('input',e=>{const t=e.target,c=cur();if(t.dataset.f)c[t.dataset.f]=t.value;else if(t.dataset.l)(t.dataset.l==='M'?c.menu:c.salat)[+t.dataset.i]=t.value});
+$('app').addEventListener('change',async e=>{const t=e.target;if(t.type!=='file')return;const c=cur(),k=t.dataset.s;$('st').textContent='Fotoğraflar hazırlanıyor…';
+  for(const f of t.files)(c.ph[k]=c.ph[k]||[]).push(await prep(f));$('st').textContent='';render()});
+$('app').addEventListener('click',e=>{const r=e.target.dataset.r;if(r){cur().ph[r].splice(+e.target.dataset.i,1);render()}});
+const setDate=d=>{S.date=d;$('dt').value=d;render()};
+$('dt').min=keys[0];$('dt').max=keys[keys.length-1];$('dt').onchange=e=>setDate(e.target.value);
+const step=n=>{const d=new Date(S.date+'T12:00:00');d.setDate(d.getDate()+n);const v=d.toISOString().slice(0,10);if(DATA[v])setDate(v)};
+$('pv').onclick=()=>step(-1);$('nx').onclick=()=>step(1);$('ta').onclick=()=>{S.type='a';render()};$('tk').onclick=()=>{S.type='k';render()};
+$('go').onclick=async()=>{const c=cur(),b=$('go');if(!DATA[S.date])return;b.disabled=true;$('st').textContent='Word dosyası hazırlanıyor…';
+  try{const al=$('al').checked,t=x=>tr(al?x.replace(/\s+/g,' ').trim():strip(x));
+   const d={type:S.type,date:fmt(S.date),menu:c.menu.filter(x=>x.trim()).map(t),salat:c.salat.filter(x=>x.trim()).map(t),icecek:tr(c.icecek),tatli:tr(c.tatli),
+     photos:{m:c.menu.map((_,i)=>c.ph['m'+i]||[]),kuvet:c.ph.kuvet||[],tray:c.ph.tray||[],salat:c.ph.salat||[],tatli:c.ph.tatli||[]}};
+   const blob=await docx.Packer.toBlob(buildDoc(d,docx));const [dd,mm,yy]=d.date.split('.');
+   const fn=`${dd}_${mm}_${yy}_${S.type==='a'?'AKŞAM_YEMEĞİ':'SABAH_KAHVALTISI'}.docx`;
+   const dl=window.claude&&await window.claude.use('downloads');
+   if(dl){await dl.save({filename:fn,data:blob});$('st').textContent='Hazır: '+fn}
+   else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;a.click();$('st').textContent='İndirildi: '+fn}
+  }catch(err){$('st').textContent=err&&err.code==='declined'?'İndirme iptal edildi.':'Hata: '+(err.message||err)}
+  b.disabled=false};
+/* ===== Aylık menü Excel yükleme (ek modül) ===== */
+const BASE=JSON.parse(JSON.stringify(DATA)),LS='yemekMenuYuklenen';
+const lsGet=()=>{try{return JSON.parse(localStorage.getItem(LS)||'{}')||{}}catch(e){return{}}};
+const lsSet=o=>{try{localStorage.setItem(LS,JSON.stringify(o));return true}catch(e){return false}};
+const pad2=n=>String(n).padStart(2,'0');
+const U=v=>String(v==null?'':v).toLocaleUpperCase('tr-TR').trim();
+const MO=['OCA','[ŞS]UB','MAR','N[İI]S','MAY','HAZ','TEM','A[ĞG]U','EYL','EK[İI]','KAS','ARA'];
+function toISO(v){let y,m,d,x;
+  if(typeof v==='number'){if(v<20000||v>80000)return null;const p=XLSX.SSF.parse_date_code(v);if(!p)return null;y=p.y;m=p.m;d=p.d}
+  else if(v instanceof Date){y=v.getFullYear();m=v.getMonth()+1;d=v.getDate()}
+  else{const s=String(v==null?'':v).trim();
+    if(x=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/)){y=+x[1];m=+x[2];d=+x[3]}
+    else if(x=s.match(/^(\d{1,2})\s*[.\/-]\s*(\d{1,2})\s*[.\/-]\s*(\d{4})/)){d=+x[1];m=+x[2];y=+x[3]}
+    else if(x=U(s).match(/(\d{1,2})\s+([A-ZÇĞİÖŞÜ]+)\s+(\d{4})/)){d=+x[1];y=+x[3];m=MO.findIndex(r=>new RegExp('^'+r).test(x[2]))+1;if(!m)return null}
+    else return null}
+  const iso=`${y}-${pad2(m)}-${pad2(d)}`,t=new Date(Date.UTC(y,m-1,d));
+  return isNaN(t)||t.toISOString().slice(0,10)!==iso?null:iso}
+const colCat=h=>{const u=U(h);if(!u)return null;if(/TAR[İI]H/.test(u))return'date';if(/KAHVALTI/.test(u))return'k';if(/SALAT/.test(u))return's';
+  if(/AK[ŞS]AM/.test(u))return'a';if(/[ÖO][ĞG][ÜU]N|KATEGOR/.test(u))return'meal';if(/YEMEK|MEN[ÜU]/.test(u))return'a';return null};
+/* Belediye şablonu: haftalık bloklar; tarih hücresi + altında MENÜ|KAL|SALATBAR|KAL (akşam) ya da yemek|KAL (kahvaltı) */
+function parseBlocks(wb){const out={},seen=new Set();
+  for(const name of wb.SheetNames){
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,raw:true,defval:null,blankrows:true});
+    const g=(r,c)=>(rows[r]||[])[c],T=v=>typeof v==='string'?U(v):'',isD=v=>(typeof v==='number'&&v>20000&&v<80000)||v instanceof Date;
+    for(let r=0;r<rows.length;r++)for(let c=0;c<(rows[r]||[]).length;c++){
+      const v=g(r,c);if(!isD(v))continue;const iso=toISO(v);if(!iso)continue;
+      const kind=/^MEN[ÜU]$/.test(T(g(r+1,c)))?'a':T(g(r,c+1))==='KAL'?'k':null;if(!kind)continue;
+      const read=(cc,cat)=>{const sk=cat+iso;if(seen.has(sk))return;seen.add(sk);const o=out[iso]=out[iso]||{a:[],s:[],k:[]};
+        for(let i=r+(kind==='a'?2:1);i<rows.length&&i<r+30;i++){const x=g(i,cc);if(isD(x))break;
+          if(typeof x==='string'){const t=x.replace(/\s+/g,' ').trim(),u=U(t);if(u==='TOPLAM'||u==='MENÜ'||u==='SALATBAR'||u==='KAL')break;if(t)o[cat].push(t)}}};
+      if(kind==='a'){read(c,'a');if(/^SALAT/.test(T(g(r+1,c+2))))read(c+2,'s')}else read(c,'k')}}
+  Object.keys(out).forEach(d=>{const o=out[d];if(!o.a.length&&!o.s.length&&!o.k.length)delete out[d]});
+  return out}
+function parseWorkbook(wb){const b=parseBlocks(wb);return Object.keys(b).length?b:parseFlat(wb)}
+/* Basit düz tablo (yedek): Tarih | Akşam 1.. | Salatbar 1.. | Kahvaltı 1.. */
+function parseFlat(wb){const out={};
+  for(const name of wb.SheetNames){
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,raw:true,defval:null,blankrows:false});
+    let hi=-1,cols=[];
+    for(let i=0;i<Math.min(rows.length,25);i++){const c=(rows[i]||[]).map(colCat);if(c.includes('date')&&c.some(x=>x&&x!=='date')){hi=i;cols=c;break}}
+    if(hi<0)continue;
+    const dc=cols.indexOf('date'),mc=cols.indexOf('meal'),hd=rows[hi];
+    const ic=mc>=0?hd.findIndex((h,j)=>j!==dc&&j!==mc&&U(h)):-1;
+    let iso=null;
+    const add=(c,v)=>{if(v==null||!c)return;String(v).split(/[\r\n;]+/).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean)
+      .forEach(x=>{(out[iso]=out[iso]||{a:[],s:[],k:[]})[c].push(x)})};
+    for(let i=hi+1;i<rows.length;i++){const r=rows[i]||[],raw=r[dc];
+      if(raw!=null&&String(raw).trim()!=='')iso=toISO(raw);
+      if(!iso)continue;
+      if(mc>=0){const c=colCat(r[mc]);if(c==='a'||c==='s'||c==='k')add(c,r[ic])}
+      else cols.forEach((c,j)=>{if(c==='a'||c==='s'||c==='k')add(c,r[j])})}}
+  Object.keys(out).forEach(d=>{const o=out[d];if(!o.a.length&&!o.s.length&&!o.k.length)delete out[d]});
+  return out}
+function refreshRange(){keys=Object.keys(DATA).sort();$('dt').min=keys[0]||'';$('dt').max=keys[keys.length-1]||'';
+  $('xi').textContent=keys.length?`Mevcut menü aralığı: ${fmt(keys[0])} – ${fmt(keys[keys.length-1])} (${keys.length} gün)`:'';
+  $('xc').style.display=Object.keys(lsGet()).length?'':'none'}
+Object.assign(DATA,lsGet());
+$('xf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const st=$('xs');
+  if(!window.XLSX){st.textContent='Excel kütüphanesi yüklenemedi. İnternet bağlantısını kontrol edip sayfayı yenileyin.';return}
+  st.textContent='Excel okunuyor…';
+  try{const out=parseWorkbook(XLSX.read(await f.arrayBuffer(),{type:'array'})),ds=Object.keys(out).sort();
+    if(!ds.length){st.textContent='Dosyada menü bulunamadı. Belediyenin onaylı aylık menü dosyasını (AKŞAM MENÜ ve KAHVALTI sayfalarıyla) yüklediğinizden emin olun.';return}
+    Object.assign(DATA,out);const ok=lsSet(Object.assign(lsGet(),out));
+    Object.keys(S.st).forEach(k=>{if(out[k.slice(1)])delete S.st[k]});
+    refreshRange();
+    const cnt=c=>ds.filter(d=>out[d][c].length).length,miss=[['a','Akşam'],['s','Salatbar'],['k','Kahvaltı']].filter(([c])=>cnt(c)<ds.length).map(([c,t])=>`${t}: ${ds.length-cnt(c)} gün boş`);
+    st.textContent=`✓ ${ds.length} günlük menü yüklendi (${fmt(ds[0])} – ${fmt(ds[ds.length-1])}).`+(miss.length?' Dikkat → '+miss.join(', ')+'.':'')+(ok?'':' (Tarayıcıya kaydedilemedi; yalnızca bu oturumda geçerli.)');
+    const today2=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+    setDate(out[S.date]?S.date:(out[today2]?today2:ds[0]));
+  }catch(err){st.textContent='Dosya okunamadı: '+(err.message||err)}};
+let xcT;$('xc').onclick=()=>{const b=$('xc');
+  if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Emin misiniz? Silmek için tekrar dokunun';xcT=setTimeout(()=>{delete b.dataset.sure;b.textContent='Yüklenen menüleri sil'},4000);return}
+  clearTimeout(xcT);delete b.dataset.sure;b.textContent='Yüklenen menüleri sil';
+  Object.keys(lsGet()).forEach(d=>{if(BASE[d])DATA[d]=JSON.parse(JSON.stringify(BASE[d]));else delete DATA[d]});
+  try{localStorage.removeItem(LS)}catch(e){}
+  S.st={};refreshRange();$('xs').textContent='Yüklenen menüler silindi.';
+  setDate(DATA[S.date]?S.date:keys[0])};
+refreshRange();
+/* ===== /ek modül ===== */
+const today=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+setDate(DATA[today]?today:(keys.find(k=>k>=today)||keys[keys.length-1]));
+</script></body></html>
